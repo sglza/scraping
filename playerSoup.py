@@ -1,0 +1,213 @@
+import bs4 as bs
+import re
+from bs4 import BeautifulSoup as soup
+import selenium
+from selenium import webdriver
+import time
+
+def getPlayerHitting():
+    
+    print("getting player hitting stats ...")
+
+    fileName = 'playerHitting.csv'
+    f = open(fileName, 'w')
+    headers = 'Rank, Player, Team, Position, Games, At Bats, Runs, Hits, Doubles, Triples, Home Runs, Runs Batted, Walks, Strikeout, Bases Stolen, Caught Stealing, Avg. Hits (hits/at bats), On-base %, Slugging %, O+S\n'
+    f.write(headers)
+
+    my_url = "http://mlb.mlb.com/stats/sortable_es.jsp#elem=%5Bobject+Object%5D&tab_level=child&click_text=Sortable+Player+hitting&game_type='R'&season=2018&season_type=ANY&league_code='MLB'&sectionType=sp&statType=hitting&page=1&ts=1569359008122&playerType=QUALIFIER&sportCode='mlb'&split=&team_id=&active_sw=&position=&page_type=SortablePlayer&sortOrder='desc'&sortColumn=avg&results=&perPage=50&timeframe=&last_x_days=&extended=0"
+
+    browser = webdriver.Firefox()
+    browser.get(my_url)
+
+    html = browser.page_source
+    webpageSoup = bs.BeautifulSoup(html, 'html.parser')
+
+    firstTable = webpageSoup.find_all('tr', {'tabindex':'0'})
+    #print(tableRows)
+    #print(len(tableRows)) #50/50
+    
+    for row in firstTable:
+
+        rank = row.find_all('td', {'class':'dg-rank'})
+        jugador = row.find_all('td', {'class':'dg-name_display_last_init'})
+        equipo = row.find_all('td', {'class':'dg-team_abbrev'})
+        pos = row.find_all('td', {'class':'dg-pos'})
+        noJuegos = row.find_all('td', {'class':'dg-g'})
+        ab = row.find_all('td', {'class':'dg-ab'})
+        carreras = row.find_all('td', {'class':'dg-r'})
+        hits = row.find_all('td', {'class':'dg-h'})
+        doble = row.find_all('td', {'class':'dg-d'})
+        triple = row.find_all('td', {'class':'dg-t'})
+        homeRuns = row.find_all('td', {'class':'dg-hr'})
+        impulsadas = row.find_all('td', {'class':'dg-rbi'})
+        baseXbola = row.find_all('td', {'class':'dg-bb'})
+        strikeout = row.find_all('td', {'class':'dg-so'})
+        baseRobada = row.find_all('td', {'class':'dg-sb'})
+        caught = row.find_all('td', {'class':'dg-cs'})
+        avgHits = row.find_all('td', {'class':'dg-avg'})
+        onBasePercent = row.find_all('td', {'class':'dg-obp'})
+        sluggingPercent = row.find_all('td', {'class':'dg-slg'})
+        sumaPercent = row.find_all('td', {'class':'dg-ops'})
+        
+        f.write(rank[0].text + ',' + '"' + jugador[0].a.text + '"' + ',' + equipo[0].text + ',' + pos[0].text + ',' + noJuegos[0].text + ',' + ab[0].text + ',' + carreras[0].text + ',' + hits[0].text + ',' + doble[0].text + ',' + triple[0].text + ',' + homeRuns[0].text + ',' + impulsadas[0].text + ',' + baseXbola[0].text + ',' + strikeout[0].text + ',' + baseRobada[0].text + ',' + caught[0].text + ',' + avgHits[0].text + ',' + onBasePercent[0].text + ',' + sluggingPercent[0].text + ',' + sumaPercent[0].text + '\n')
+
+    print('loading second page ...')
+
+    secondPage = browser.find_elements_by_xpath('/html/body/div[2]/div/div[3]/div/div[1]/div[11]/fieldset/button[4]') 
+    secondPage[0].click()
+
+    time.sleep(3)
+
+    html = browser.page_source
+    webpageSoup = bs.BeautifulSoup(html, 'html.parser')
+
+    secondTable = webpageSoup.find_all('tr', {'tabindex':'0'})
+    
+    for row in secondTable:
+
+        rank = row.find_all('td', {'class':'dg-rank'})
+        jugador = row.find_all('td', {'class':'dg-name_display_last_init'})
+        equipo = row.find_all('td', {'class':'dg-team_abbrev'})
+        pos = row.find_all('td', {'class':'dg-pos'})
+        noJuegos = row.find_all('td', {'class':'dg-g'})
+        ab = row.find_all('td', {'class':'dg-ab'})
+        carreras = row.find_all('td', {'class':'dg-r'})
+        hits = row.find_all('td', {'class':'dg-h'})
+        doble = row.find_all('td', {'class':'dg-d'})
+        triple = row.find_all('td', {'class':'dg-t'})
+        homeRuns = row.find_all('td', {'class':'dg-hr'})
+        impulsadas = row.find_all('td', {'class':'dg-rbi'})
+        baseXbola = row.find_all('td', {'class':'dg-bb'})
+        strikeout = row.find_all('td', {'class':'dg-so'})
+        baseRobada = row.find_all('td', {'class':'dg-sb'})
+        caught = row.find_all('td', {'class':'dg-cs'})
+        avgHits = row.find_all('td', {'class':'dg-avg'})
+        onBasePercent = row.find_all('td', {'class':'dg-obp'})
+        sluggingPercent = row.find_all('td', {'class':'dg-slg'})
+        sumaPercent = row.find_all('td', {'class':'dg-ops'})
+        
+        f.write(rank[0].text + ',' + '"' + jugador[0].a.text + '"' + ',' + equipo[0].text + ',' + pos[0].text + ',' + noJuegos[0].text + ',' + ab[0].text + ',' + carreras[0].text + ',' + hits[0].text + ',' + doble[0].text + ',' + triple[0].text + ',' + homeRuns[0].text + ',' + impulsadas[0].text + ',' + baseXbola[0].text + ',' + strikeout[0].text + ',' + baseRobada[0].text + ',' + caught[0].text + ',' + avgHits[0].text + ',' + onBasePercent[0].text + ',' + sluggingPercent[0].text + ',' + sumaPercent[0].text + '\n')   
+
+    print('loading third page ...')
+
+    thirdPage = browser.find_elements_by_xpath('/html/body/div[2]/div/div[3]/div/div[1]/div[11]/fieldset/button[4]') 
+    thirdPage[0].click()
+
+    time.sleep(3)
+
+    html = browser.page_source
+    webpageSoup = bs.BeautifulSoup(html, 'html.parser')
+
+    thirdTable = webpageSoup.find_all('tr', {'tabindex':'0'})
+    
+    for row in thirdTable:
+        rank = row.find_all('td', {'class':'dg-rank'})
+        jugador = row.find_all('td', {'class':'dg-name_display_last_init'})
+        equipo = row.find_all('td', {'class':'dg-team_abbrev'})
+        pos = row.find_all('td', {'class':'dg-pos'})
+        noJuegos = row.find_all('td', {'class':'dg-g'})
+        ab = row.find_all('td', {'class':'dg-ab'})
+        carreras = row.find_all('td', {'class':'dg-r'})
+        hits = row.find_all('td', {'class':'dg-h'})
+        doble = row.find_all('td', {'class':'dg-d'})
+        triple = row.find_all('td', {'class':'dg-t'})
+        homeRuns = row.find_all('td', {'class':'dg-hr'})
+        impulsadas = row.find_all('td', {'class':'dg-rbi'})
+        baseXbola = row.find_all('td', {'class':'dg-bb'})
+        strikeout = row.find_all('td', {'class':'dg-so'})
+        baseRobada = row.find_all('td', {'class':'dg-sb'})
+        caught = row.find_all('td', {'class':'dg-cs'})
+        avgHits = row.find_all('td', {'class':'dg-avg'})
+        onBasePercent = row.find_all('td', {'class':'dg-obp'})
+        sluggingPercent = row.find_all('td', {'class':'dg-slg'})
+        sumaPercent = row.find_all('td', {'class':'dg-ops'})
+        
+        f.write(rank[0].text + ',' + '"' + jugador[0].a.text + '"' + ',' + equipo[0].text + ',' + pos[0].text + ',' + noJuegos[0].text + ',' + ab[0].text + ',' + carreras[0].text + ',' + hits[0].text + ',' + doble[0].text + ',' + triple[0].text + ',' + homeRuns[0].text + ',' + impulsadas[0].text + ',' + baseXbola[0].text + ',' + strikeout[0].text + ',' + baseRobada[0].text + ',' + caught[0].text + ',' + avgHits[0].text + ',' + onBasePercent[0].text + ',' + sluggingPercent[0].text + ',' + sumaPercent[0].text + '\n')   
+      
+    f.close()
+    browser.close()
+
+#get headers
+#complete f.write
+def getPlayerPitching():
+    
+    print("getting player pitching stats ...")
+
+    fileName = 'playerPitching.csv'
+    f = open(fileName, 'w')
+    headers = 'Wins, Losses, Avg. Earned Runs, Games, Games Started, Saves, Save Opportunities, Innings Pitched, Hits Allowed, Runs Allowed, Earned Runs Allowed, Home Runs Allowed, Base on Balls, Strikeouts, Avg. (Hits / At Bats), WHIP ((H+W)/IP)\n'
+    f.write(headers)
+
+    my_url = "http://mlb.mlb.com/stats/sortable_es.jsp#elem=%5Bobject+Object%5D&tab_level=child&click_text=Sortable+Player+pitching&game_type='R'&season=2019&season_type=ANY&league_code='MLB'&sectionType=sp&statType=pitching&page=1&ts=1569861695577&playerType=QUALIFIER&sportCode='mlb'&split=&team_id=&active_sw=&position=&page_type=SortablePlayer&sortOrder='desc'&sortColumn=avg&results=&perPage=50&timeframe=&last_x_days=&extended=0"
+
+    browser = webdriver.Firefox()
+    browser.get(my_url)
+
+    html = browser.page_source
+    webpageSoup = bs.BeautifulSoup(html, 'html.parser')
+
+    firstTable = webpageSoup.find_all('tr', {'tabindex':'0'})
+    
+    for row in firstTable:
+        rank = row.find_all('td', {'class':'dg-rank'})
+        jugador = row.find_all('td', {'class':'dg-name_display_last_init'})
+        equipo = row.find_all('td', {'class':'dg-team_abbrev'})
+        victoria = row.find_all('td', {'class':'dg-w'})
+        derrota = row.find_all('td', {'class':'dg-l'})
+        era = row.find_all('td', {'class':'dg-era'})
+        g = row.find_all('td', {'class':'dg-g'})
+        gs = row.find_all('td', {'class':'dg-gs'})
+        sv = row.find_all('td', {'class':'dg-sv'})
+        svo = row.find_all('td', {'class':'dg-svo'})
+        dfip = row.find_all('td', {'class':'dg-ip'})
+        dgh = row.find_all('td', {'class':'dg-h'})
+        dgr = row.find_all('td', {'class':'dg-r'})
+        dger = row.find_all('td', {'class':'dg-er'})
+        dghr = row.find_all('td', {'class':'dg-hr'})
+        bb = row.find_all('td', {'class':'dg-bb'})
+        so = row.find_all('td', {'class':'dg-so'})
+        dgavg  = row.find_all('td', {'class':'dg-avg'})
+        whip = row.find_all('td', {'class':'dg-whip'})
+        
+        f.write(rank[0].text + ',' + '"' + jugador[0].a.text + '"' + ',' + equipo[0].text + ',' + victoria[0].text + ',' + derrota[0].text + ',' +era[0].text + ',' + g[0].text + ',' + gs[0].text + ',' + sv[0].text + ',' + svo[0].text + ',' + dfip[0].text + ',' + dgh[0].text + ',' + dgr[0].text + ',' + dger[0].text + ',' + dghr[0].text + ',' + bb[0].text + ',' + so[0].text + ',' + dgavg[0].text + ',' + whip[0].text + '\n')
+
+    print('loading second page ...')
+
+    secondPage = browser.find_elements_by_xpath('/html/body/div[2]/div/div[3]/div/div[1]/div[11]/fieldset/button[4]') 
+    secondPage[0].click()
+
+    time.sleep(3)
+
+    html = browser.page_source
+    webpageSoup = bs.BeautifulSoup(html, 'html.parser')
+
+    secondTable = webpageSoup.find_all('tr', {'tabindex':'0'})
+
+    for row in secondTable:
+        rank = row.find_all('td', {'class':'dg-rank'})
+        jugador = row.find_all('td', {'class':'dg-name_display_last_init'})
+        equipo = row.find_all('td', {'class':'dg-team_abbrev'})
+        victoria = row.find_all('td', {'class':'dg-w'})
+        derrota = row.find_all('td', {'class':'dg-l'})
+        era = row.find_all('td', {'class':'dg-era'})
+        g = row.find_all('td', {'class':'dg-g'})
+        gs = row.find_all('td', {'class':'dg-gs'})
+        sv = row.find_all('td', {'class':'dg-sv'})
+        svo = row.find_all('td', {'class':'dg-svo'})
+        dfip = row.find_all('td', {'class':'dg-ip'})
+        dgh = row.find_all('td', {'class':'dg-h'})
+        dgr = row.find_all('td', {'class':'dg-r'})
+        dger = row.find_all('td', {'class':'dg-er'})
+        dghr = row.find_all('td', {'class':'dg-hr'})
+        bb = row.find_all('td', {'class':'dg-bb'})
+        so = row.find_all('td', {'class':'dg-so'})
+        dgavg  = row.find_all('td', {'class':'dg-avg'})
+        whip = row.find_all('td', {'class':'dg-whip'})
+
+        f.write(rank[0].text + ',' + '"' + jugador[0].a.text + '"' + ',' + equipo[0].text + ',' + victoria[0].text + ',' + derrota[0].text + ',' +era[0].text + ',' + g[0].text + ',' + gs[0].text + ',' + sv[0].text + ',' + svo[0].text + ',' + dfip[0].text + ',' + dgh[0].text + ',' + dgr[0].text + ',' + dger[0].text + ',' + dghr[0].text + ',' + bb[0].text + ',' + so[0].text + ',' + dgavg[0].text + ',' + whip[0].text + '\n')
+        
+    f.close()
+    browser.close()
+
+getPlayerHitting()
+getPlayerPitching()
