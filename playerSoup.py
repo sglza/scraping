@@ -5,6 +5,182 @@ import selenium
 from selenium import webdriver
 import time
 
+def getPlayerFielding():
+    print("getting player fielding stats ...")
+
+    fileName = 'playerFielding.csv'
+    f = open(fileName, 'w')
+    headers = 'Games, Games Started, Innings, Total Chances, Putout, Total Assists, Total Error, Double Plays, Stolen Bases, Caught Stealing, Stolen Base Percentage, Passed Balls, Wild Pitches, Average of errors, Range Factor\n'
+    f.write(headers)
+
+    my_url = "http://mlb.mlb.com/stats/sortable_es.jsp#elem=%5Bobject+Object%5D&tab_level=child&click_text=Sortable+Player+fielding&game_type='R'&season=2019&season_type=ANY&league_code='MLB'&sectionType=sp&statType=fielding&page=1&ts=1569886534691&playerType=QUALIFIER&sportCode='mlb'&split=&team_id=&active_sw=&position=&page_type=SortablePlayer&sortOrder='desc'&sortColumn=avg&results=&perPage=50&timeframe=&last_x_days=&extended=0"
+
+    browser = webdriver.Firefox()
+    browser.get(my_url)
+
+    html = browser.page_source
+    webpageSoup = bs.BeautifulSoup(html, 'html.parser')
+
+    firstTable = webpageSoup.find_all('tr', {'tabindex': '0'})
+
+    for row in firstTable:
+        rank = row.find_all('td', {'class': 'dg-rank'})
+        jugador = row.find_all('td', {'class': 'dg-name_display_last_init'})
+        equipo = row.find_all('td', {'class': 'dg-team_abbrev'})
+        victoria = row.find_all('td', {'class': 'dg-position'})
+        derrota = row.find_all('td', {'class': 'dg-g'})
+        era = row.find_all('td', {'class': 'dg-gs'})
+        g = row.find_all('td', {'class': 'dg-inn'})
+        gs = row.find_all('td', {'class': 'dg-tc'})
+        sv = row.find_all('td', {'class': 'dg-po'})
+        svo = row.find_all('td', {'class': 'dg-a'})
+        dfip = row.find_all('td', {'class': 'dg-e'})
+        dgh = row.find_all('td', {'class': 'dg-dp'})
+        dgr = row.find_all('td', {'class': 'dg-sb'})
+        dger = row.find_all('td', {'class': 'dg-cs'})
+        dghr = row.find_all('td', {'class': 'dg-sbpct'})
+        bb = row.find_all('td', {'class': 'dg-pb'})
+        so = row.find_all('td', {'class': 'dg-c_wp'})
+        dgavg = row.find_all('td', {'class': 'dg-fpt active'})
+        whip = row.find_all('td', {'class': 'dg-rf'})
+
+        f.write(rank[0].text + ',' + '"' + jugador[0].a.text + '"' + ',' + equipo[0].text + ',' + victoria[0].text + ',' + derrota[0].text + ',' + era[0].text + ',' + g[0].text + ',' + gs[0].text + ',' + sv[0].text + ',' + svo[0].text + ',' + dfip[0].text + ',' + dgh[0].text + ',' + dgr[0].text + ',' + dger[0].text + ',' + dghr[0].text + ',' + bb[0].text + ',' + so[0].text + ',' + dgavg[0].text + ',' + whip[0].text + '\n')
+
+    secondPage = browser.find_elements_by_xpath('/html/body/div[2]/div/div[3]/div/div[1]/div[11]/fieldset/button[4]')
+    secondPage[0].click()
+
+    time.sleep(3)
+
+    html = browser.page_source
+    webpageSoup = bs.BeautifulSoup(html, 'html.parser')
+
+    secondTable = webpageSoup.find_all('tr', {'tabindex': '0'})
+
+    for row in secondTable:
+        rank = row.find_all('td', {'class': 'dg-rank'})
+        jugador = row.find_all('td', {'class': 'dg-name_display_last_init'})
+        equipo = row.find_all('td', {'class': 'dg-team_abbrev'})
+        victoria = row.find_all('td', {'class': 'dg-position'})
+        derrota = row.find_all('td', {'class': 'dg-g'})
+        era = row.find_all('td', {'class': 'dg-gs'})
+        g = row.find_all('td', {'class': 'dg-inn'})
+        gs = row.find_all('td', {'class': 'dg-tc'})
+        sv = row.find_all('td', {'class': 'dg-po'})
+        svo = row.find_all('td', {'class': 'dg-a'})
+        dfip = row.find_all('td', {'class': 'dg-e'})
+        dgh = row.find_all('td', {'class': 'dg-dp'})
+        dgr = row.find_all('td', {'class': 'dg-sb'})
+        dger = row.find_all('td', {'class': 'dg-cs'})
+        dghr = row.find_all('td', {'class': 'dg-sbpct'})
+        bb = row.find_all('td', {'class': 'dg-pb'})
+        so = row.find_all('td', {'class': 'dg-c_wp'})
+        dgavg = row.find_all('td', {'class': 'dg-fpt active'})
+        whip = row.find_all('td', {'class': 'dg-rf'})
+
+        f.write(rank[0].text + ',' + '"' + jugador[0].a.text + '"' + ',' + equipo[0].text + ',' + victoria[0].text + ',' + derrota[0].text + ',' + era[0].text + ',' + g[0].text + ',' + gs[0].text + ',' + sv[0].text + ',' + svo[0].text + ',' + dfip[0].text + ',' + dgh[0].text + ',' + dgr[0].text + ',' + dger[0].text + ',' + dghr[0].text + ',' + bb[0].text + ',' + so[0].text + ',' + dgavg[0].text + ',' + whip[0].text + '\n')
+
+    thirdPage = browser.find_elements_by_xpath('/html/body/div[2]/div/div[3]/div/div[1]/div[11]/fieldset/button[4]')
+    thirdPage[0].click()
+
+    time.sleep(3)
+
+    html = browser.page_source
+    webpageSoup = bs.BeautifulSoup(html, 'html.parser')
+
+    thirdTable = webpageSoup.find_all('tr', {'tabindex': '0'})
+
+    for row in thirdTable:
+        rank = row.find_all('td', {'class': 'dg-rank'})
+        jugador = row.find_all('td', {'class': 'dg-name_display_last_init'})
+        equipo = row.find_all('td', {'class': 'dg-team_abbrev'})
+        victoria = row.find_all('td', {'class': 'dg-position'})
+        derrota = row.find_all('td', {'class': 'dg-g'})
+        era = row.find_all('td', {'class': 'dg-gs'})
+        g = row.find_all('td', {'class': 'dg-inn'})
+        gs = row.find_all('td', {'class': 'dg-tc'})
+        sv = row.find_all('td', {'class': 'dg-po'})
+        svo = row.find_all('td', {'class': 'dg-a'})
+        dfip = row.find_all('td', {'class': 'dg-e'})
+        dgh = row.find_all('td', {'class': 'dg-dp'})
+        dgr = row.find_all('td', {'class': 'dg-sb'})
+        dger = row.find_all('td', {'class': 'dg-cs'})
+        dghr = row.find_all('td', {'class': 'dg-sbpct'})
+        bb = row.find_all('td', {'class': 'dg-pb'})
+        so = row.find_all('td', {'class': 'dg-c_wp'})
+        dgavg = row.find_all('td', {'class': 'dg-fpt active'})
+        whip = row.find_all('td', {'class': 'dg-rf'})
+
+        f.write(rank[0].text + ',' + '"' + jugador[0].a.text + '"' + ',' + equipo[0].text + ',' + victoria[0].text + ',' + derrota[0].text + ',' + era[0].text + ',' + g[0].text + ',' + gs[0].text + ',' + sv[0].text + ',' + svo[0].text + ',' + dfip[0].text + ',' + dgh[0].text + ',' + dgr[0].text + ',' + dger[0].text + ',' + dghr[0].text + ',' + bb[0].text + ',' + so[0].text + ',' + dgavg[0].text + ',' + whip[0].text + '\n')
+
+    fourthPage = browser.find_elements_by_xpath('/html/body/div[2]/div/div[3]/div/div[1]/div[11]/fieldset/button[4]')
+    fourthPage[0].click()
+
+    time.sleep(3)
+
+    html = browser.page_source
+    webpageSoup = bs.BeautifulSoup(html, 'html.parser')
+
+    fourthTable = webpageSoup.find_all('tr', {'tabindex': '0'})
+
+    for row in fourthTable:
+        rank = row.find_all('td', {'class': 'dg-rank'})
+        jugador = row.find_all('td', {'class': 'dg-name_display_last_init'})
+        equipo = row.find_all('td', {'class': 'dg-team_abbrev'})
+        victoria = row.find_all('td', {'class': 'dg-position'})
+        derrota = row.find_all('td', {'class': 'dg-g'})
+        era = row.find_all('td', {'class': 'dg-gs'})
+        g = row.find_all('td', {'class': 'dg-inn'})
+        gs = row.find_all('td', {'class': 'dg-tc'})
+        sv = row.find_all('td', {'class': 'dg-po'})
+        svo = row.find_all('td', {'class': 'dg-a'})
+        dfip = row.find_all('td', {'class': 'dg-e'})
+        dgh = row.find_all('td', {'class': 'dg-dp'})
+        dgr = row.find_all('td', {'class': 'dg-sb'})
+        dger = row.find_all('td', {'class': 'dg-cs'})
+        dghr = row.find_all('td', {'class': 'dg-sbpct'})
+        bb = row.find_all('td', {'class': 'dg-pb'})
+        so = row.find_all('td', {'class': 'dg-c_wp'})
+        dgavg = row.find_all('td', {'class': 'dg-fpt active'})
+        whip = row.find_all('td', {'class': 'dg-rf'})
+
+        f.write(rank[0].text + ',' + '"' + jugador[0].a.text + '"' + ',' + equipo[0].text + ',' + victoria[0].text + ',' + derrota[0].text + ',' + era[0].text + ',' + g[0].text + ',' + gs[0].text + ',' + sv[0].text + ',' + svo[0].text + ',' + dfip[0].text + ',' + dgh[0].text + ',' + dgr[0].text + ',' + dger[0].text + ',' + dghr[0].text + ',' + bb[0].text + ',' + so[0].text + ',' + dgavg[0].text + ',' + whip[0].text + '\n')
+
+    fifthPage = browser.find_elements_by_xpath('/html/body/div[2]/div/div[3]/div/div[1]/div[11]/fieldset/button[4]')
+    fifthPage[0].click()
+
+    time.sleep(3)
+
+    html = browser.page_source
+    webpageSoup = bs.BeautifulSoup(html, 'html.parser')
+
+    fifthTable = webpageSoup.find_all('tr', {'tabindex': '0'})
+
+    for row in fifthTable:
+        rank = row.find_all('td', {'class': 'dg-rank'})
+        jugador = row.find_all('td', {'class': 'dg-name_display_last_init'})
+        equipo = row.find_all('td', {'class': 'dg-team_abbrev'})
+        victoria = row.find_all('td', {'class': 'dg-position'})
+        derrota = row.find_all('td', {'class': 'dg-g'})
+        era = row.find_all('td', {'class': 'dg-gs'})
+        g = row.find_all('td', {'class': 'dg-inn'})
+        gs = row.find_all('td', {'class': 'dg-tc'})
+        sv = row.find_all('td', {'class': 'dg-po'})
+        svo = row.find_all('td', {'class': 'dg-a'})
+        dfip = row.find_all('td', {'class': 'dg-e'})
+        dgh = row.find_all('td', {'class': 'dg-dp'})
+        dgr = row.find_all('td', {'class': 'dg-sb'})
+        dger = row.find_all('td', {'class': 'dg-cs'})
+        dghr = row.find_all('td', {'class': 'dg-sbpct'})
+        bb = row.find_all('td', {'class': 'dg-pb'})
+        so = row.find_all('td', {'class': 'dg-c_wp'})
+        dgavg = row.find_all('td', {'class': 'dg-fpt active'})
+        whip = row.find_all('td', {'class': 'dg-rf'})
+
+        f.write(rank[0].text + ',' + '"' + jugador[0].a.text + '"' + ',' + equipo[0].text + ',' + victoria[0].text + ',' + derrota[0].text + ',' + era[0].text + ',' + g[0].text + ',' + gs[0].text + ',' + sv[0].text + ',' + svo[0].text + ',' + dfip[0].text + ',' + dgh[0].text + ',' + dgr[0].text + ',' + dger[0].text + ',' + dghr[0].text + ',' + bb[0].text + ',' + so[0].text + ',' + dgavg[0].text + ',' + whip[0].text + '\n')
+
+    f.close()
+    browser.close()
+
 def getPlayerHitting():
     
     print("getting player hitting stats ...")
